@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine Gift</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(to right, #ffafbd, #ffc3a0);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hearts {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+        
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: #ff6b8b;
+            opacity: 0.3;
+        }
+        
+        .envelope {
+            width: 200px;
+            height: 120px;
+            margin: 20px auto;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .envelope .body {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #ff6b8b;
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 50% 70%);
+        }
+        
+        .envelope .flap {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #ff4d6d;
+            clip-path: polygon(0% 0%, 100% 0%, 50% 50%);
+            transform-origin: top;
+            transition: transform 0.5s;
+        }
+        
+        .envelope:hover .flap {
+            transform: rotateX(180deg);
+        }
+        
+        .envelope-heart {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 40px;
+            z-index: 2;
+        }
+        
+        h1 {
+            color: #ff2e63;
+            font-size: 2.5rem;
+            margin: 20px 0;
+        }
+        
+        p {
+            color: #666;
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+        
+        .open-btn {
+            background: #ff2e63;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 30px 0;
+            transition: all 0.3s;
+        }
+        
+        .open-btn:hover {
+            background: #ff4d6d;
+            transform: scale(1.05);
+        }
+        
+        .loader {
+            width: 300px;
+            height: 10px;
+            background: #eee;
+            border-radius: 10px;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+        
+        .loader-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(to right, #ff2e63, #ff8e53);
+            border-radius: 10px;
+            animation: loading 3s infinite;
+        }
+        
+        @keyframes loading {
+            0%, 100% { width: 0%; }
+            50% { width: 100%; }
+        }
+        
+        /* Hidden content */
+        .content {
+            display: none;
+            animation: fadeIn 1s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .photos {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .photo-box {
+            width: 200px;
+            height: 200px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .photo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        /* ========== PHOTO ANIMATIONS ========== */
+
+/* 1. Hover Animation */
+.photo-box {
+    transition: all 0.6s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.photo-box:hover {
+    transform: scale(1.1);
+    box-shadow: 0 15px 30px rgba(255, 107, 139, 0.4);
+    z-index: 10;
+}
+
+.photo-box img {
+    transition: transform 0.9s ease;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.photo-box:hover img {
+    transform: scale(1.15);
+}
+
+/* 2. Auto Floating Animation */
+.photo-box {
+    animation: floatPhoto 6s ease-in-out infinite;
+}
+
+@keyframes floatPhoto {
+    0%, 100% { 
+        transform: translateY(0px) rotate(0deg); 
+    }
+    50% { 
+        transform: translateY(-15px) rotate(1deg); 
+    }
+}
+
+/* Different timing for each photo */
+.photo-box:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.photo-box:nth-child(3) {
+    animation-delay: 1s;
+}
+
+/* 3. Photo Border Pulse */
+.photo-box::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: 13px;
+    background: linear-gradient(45deg, #ff2e63, #ff8e53, #ff2e63);
+    z-index: -1;
+    opacity: 0;
+    animation: borderPulse 3s infinite;
+}
+
+@keyframes borderPulse {
+    0%, 100% { 
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 0.8;
+        transform: scale(1.02);
+    }
+}
+
+/* 4. Photo Load Animation */
+.photo-box img {
+    opacity: 0;
+    animation: fadeInUp 1s ease forwards;
+}
+
+.photo-box:nth-child(1) img {
+    animation-delay: 0.3s;
+}
+
+.photo-box:nth-child(2) img {
+    animation-delay: 0.6s;
+}
+
+.photo-box:nth-child(3) img {
+    animation-delay: 0.9s;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+        
+        .music-controls {
+            margin: 30px 0;
+        }
+        
+        .music-btn {
+            background: white;
+            border: 2px solid #ff6b8b;
+            color: #ff6b8b;
+            padding: 10px 20px;
+            border-radius: 50px;
+            margin: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .music-btn:hover {
+            background: #ff6b8b;
+            color: white;
+        }
+        
+        .back-btn {
+            background: #666;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        
+        .debug {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        /* ========== PHOTO CAPTION ========== */
+.photo-caption {
+    position: absolute;
+    bottom: -40px;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(255, 46, 99, 0.9), transparent);
+    color: white;
+    padding: 15px 10px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.5s ease;
+    text-align: center;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.photo-box:hover .photo-caption {
+    bottom: 0;
+    opacity: 1;
+    transform: translateY(0);
+}
+    </style>
+</head>
+<body>
+    <div class="debug" id="debug">
+        Status: Ready ✅
+    </div>
+    
+    <div class="container" id="container">
+        <div class="hearts" id="hearts"></div>
+        
+        <!-- First Screen -->
+        <div id="screen1">
+            <div class="envelope" onclick="openGift()">
+                <div class="flap"></div>
+                <div class="body"></div>
+                <div class="envelope-heart">💌</div>
+            </div>
+            
+            <h1>Your Valentine Gift 💝</h1>
+            <p>A special surprise is waiting for you...</p>
+            
+            <div class="loader">
+                <div class="loader-bar"></div>
+            </div>
+            
+            <button class="open-btn" onclick="openGift()">
+                Open Your Gift 🎁
+            </button>
+            
+            <p>Click the envelope or button above</p>
+        </div>
+        
+        <!-- Second Screen -->
+        <div class="content" id="screen2">
+            <h1 style="color: #ff2e63;">For My Love 💖</h1>
+            <p>You mean everything to me...</p>
+            
+            <div style="text-align: left; margin: 30px 0; padding: 20px; background: #fff5f7; border-radius: 10px;">
+                <p><strong>My Dearest Hana,</strong></p>
+                <p>Every moment with you is special.Listing your voice make my heart beat faster.</p>
+                <p>Your every photo make's my love more for you.Every single moment with you is precious.</p>
+                <p>For me every single day with you is a gift.i am blessed that you are in my life.</p>
+                <p>YOUR every I LOVE YOU makes my day happier and happier!!!</p>
+                <p>ARAZ KIYA HAI ,💖</p>
+                <p>   TERE PYAAR NE MUJHE JO PAAYA HAI ,</p>
+                <p>   DIL KE HAR KOONE MEIN BASAAYA HAI ....</p>
+                    <p>   TUJHE DEKH KE HE NEENDH AATI HAI ,</p>
+                    <p> 
+                    AUR TUJHE HE SUN KE CHAIN AATA HAI ....                                 </p>
+                    <p>                         
+                    TERE MESSAGE KE BINA SHUBH AADURI LAGTE HAI ,   </p>
+                    <p>    
+                    TERE SAATH HI TO MERE DIN POORE HOTE HAI ....
+                 </p>
+                 <p> Thank you to being my partner,And choosing me as your special one❤️.</p>
+                <p style="text-align: center; font-style: italic; color: #ff2e63; margin: 20px 0;">
+                    "I love you more than words can say"💖💖
+                </p>
+                <p style="text-align: right;"><strong>Forever Yours</strong></p>
+            </div>
+            
+            <!-- Photos -->
+            <h3>Our Memories 📸</h3>
+          <div class="photo-box">
+    <img src="photo1.jpg" alt="Memory 1" id="photo1" onerror="this.style.display='none'; document.getElementById('fallback1').style.display='block';">
+    <div id="fallback1" style="display: none; width: 100%; height: 100%; background: #ffafbd; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; font-weight: bold;">
+        <div style="font-size: 30px;">❤️</div>
+        <div>Wada Karo</div>
+    </div>
+    <!-- YEH LINE ADD KARO ↓ -->
+    <div class="photo-caption">Click Me 💖</div>
+     </div>
+               <div class="photo-box">
+    <img src="photo2.jpg" alt="Memory 2" id="photo2" onerror="this.style.display='none'; document.getElementById('fallback2').style.display='block';">
+    <div id="fallback2" style="display: none; width: 100%; height: 100%; background: #ffc3a0; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; font-weight: bold;">
+        <div style="font-size: 30px;">💖</div>
+        <div>I Love You</div>
+    </div>
+   
+    <div class="photo-caption">Click Me 💖</div>
+</div>
+
+               <!-- Photo 3 ke liye -->
+<div class="photo-box">
+    <img src="photo3.jpg" alt="Memory 3" id="photo3" onerror="this.style.display='none'; document.getElementById('fallback3').style.display='block';">
+    <div id="fallback3" style="display: none; width: 100%; height: 100%; background: #ff6b8b; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; font-weight: bold;">
+        <div style="font-size: 30px;">📸</div>
+        <div>Our Journey</div>
+    </div>
+    
+    <div class="photo-caption">Click Me 💖</div>
+</div>
+            
+            <!-- Music -->
+            <div class="music-controls">
+                <h3>Our Songs 🎵</h3>
+                <button class="music-btn" onclick="playSong2()">Play O Mere Lila</button>
+                <button class="music-btn" onclick="playSong1()">Play Perfect</button>
+                <button class="music-btn" onclick="pauseMusic()">Pause Music</button>
+            </div>
+            
+          
+            <div style="margin: 30px 0;">
+                <button class="music-btn" onclick="createHearts()">Create Hearts ❤️</button>
+                <button class="music-btn" onclick="createConfetti()">Celebrate! 🎉</button>
+            </div>
+            
+            <button class="back-btn" onclick="goBack()">Back to Start</button>
+        </div>
+    </div>
+    
+    <script>
+        // Debug info
+        const debug = document.getElementById('debug');
+        
+        // Create floating hearts
+        function createFloatingHearts() {
+            const heartsContainer = document.getElementById('hearts');
+            for(let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.top = Math.random() * 100 + '%';
+                heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                heart.style.opacity = Math.random() * 0.3 + 0.1;
+                heart.style.animation = `float ${Math.random() * 10 + 5}s infinite linear`;
+                
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes float {
+                        0% { transform: translateY(0) rotate(0deg); }
+                        100% { transform: translateY(-100vh) rotate(360deg); }
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                heartsContainer.appendChild(heart);
+            }
+            debug.innerHTML = "Hearts created ✅";
+        }
+        
+        // Open gift function
+        function openGift() {
+            debug.innerHTML = "Opening gift... ✅";
+            
+            // Animate envelope
+            document.querySelector('.flap').style.transform = 'rotateX(180deg)';
+            
+            // Hide screen1, show screen2
+            setTimeout(() => {
+                document.getElementById('screen1').style.display = 'none';
+                document.getElementById('screen2').style.display = 'block';
+                document.getElementById('screen2').classList.add('content');
+                
+                // Create hearts
+                createFloatingHearts();
+                createConfetti();
+                
+                // Check photos
+                checkPhotos();
+
+                setupPhotoClickAnimations();
+                
+                debug.innerHTML = "Gift opened! ✅ Photos checked";
+            }, 800);
+        }
+        
+        // Go back
+        function goBack() {
+            document.getElementById('screen2').style.display = 'none';
+            document.getElementById('screen1').style.display = 'block';
+            document.querySelector('.flap').style.transform = 'rotateX(0deg)';
+            debug.innerHTML = "Back to start ✅";
+        }
+        
+        // Check photos
+        function checkPhotos() {
+            const photos = ['photo1.jpg', 'photo2.jpg', 'photo3.jpg'];
+            let status = "Photos: ";
+            
+            photos.forEach((photo, index) => {
+                const img = new Image();
+                img.src = photo;
+                
+                img.onload = function() {
+                    status += `Photo${index+1} ✅ `;
+                    debug.innerHTML = status;
+                };
+                
+                img.onerror = function() {
+                    document.getElementById(`fallback${index+1}`).style.display = 'block';
+                    status += `Photo${index+1} ❌ `;
+                    debug.innerHTML = status + " (Using fallback)";
+                };
+            });
+        }
+        
+        // Music functions
+        let currentAudio = null;
+        
+        
+        
+        function playSong2() {
+            if(currentAudio) {
+                currentAudio.pause();
+            }
+            
+            currentAudio = new Audio();
+            currentAudio.src = 'Omerelila.mp3';
+            
+            currentAudio.play().then(() => {
+                debug.innerHTML = "Playing: O Mere Lila ✅";
+            }).catch(error => {
+                debug.innerHTML = "Audio error ❌";
+                currentAudio.src = 'https://assets.mixkit.co/music/preview/mixkit-romantic-sunset-678.mp3';
+                currentAudio.play();
+                debug.innerHTML = "Playing online version ✅";
+            });
+        }
+        function playSong1() {
+            if(currentAudio) {
+                currentAudio.pause();
+            }
+            
+            currentAudio = new Audio();
+            currentAudio.src = 'Perfect.mp3';
+            
+            currentAudio.play().then(() => {
+                debug.innerHTML = "Playing: Perfect ✅";
+            }).catch(error => {
+                debug.innerHTML = "Audio error ❌";
+                currentAudio.src = 'c:\Users\X\Downloads\Perfect.mp3';
+                currentAudio.play();
+                debug.innerHTML = "Playing online version ✅";
+            });
+        }
+        
+        function pauseMusic() {
+            if(currentAudio) {
+                currentAudio.pause();
+                debug.innerHTML = "Music paused ⏸️";
+            }
+        }
+        
+        // Create hearts
+        function createHearts() {
+            const container = document.getElementById('hearts');
+            for(let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = '❤';
+                    heart.style.position = 'absolute';
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.top = '100%';
+                    heart.style.fontSize = (Math.random() * 30 + 20) + 'px';
+                    heart.style.color = '#ff2e63';
+                    heart.style.opacity = '0.8';
+                    heart.style.zIndex = '1000';
+                    heart.style.pointerEvents = 'none';
+                    heart.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
+                    
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        @keyframes fall {
+                            to {
+                                transform: translateY(-100vh) rotate(360deg);
+                                opacity: 0;
+                            }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                    
+                    container.appendChild(heart);
+                    
+                    setTimeout(() => heart.remove(), 5000);
+                }, i * 50);
+            }
+            debug.innerHTML = "Creating hearts... ✅";
+        }
+        
+        // Create confetti
+        function createConfetti() {
+            const container = document.getElementById('hearts');
+            const colors = ['#ff2e63', '#ff6b8b', '#ff8e53', '#06d6a0'];
+            
+            for(let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.style.position = 'absolute';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.top = '-20px';
+                    confetti.style.width = '10px';
+                    confetti.style.height = '10px';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = '50%';
+                    confetti.style.opacity = '0.7';
+                    confetti.style.zIndex = '1000';
+                    confetti.style.pointerEvents = 'none';
+                    confetti.style.animation = `confettiFall ${Math.random() * 3 + 2}s linear forwards`;
+                    
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        @keyframes confettiFall {
+                            to {
+                                transform: translateY(100vh) rotate(${Math.random() * 360}deg);
+                                opacity: 0;
+                            }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                    
+                    container.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 5000);
+                }, i * 20);
+            }
+            debug.innerHTML = "Confetti! 🎉";
+        }
+        
+        // Initialize
+        window.onload = function() {
+            createFloatingHearts();
+            debug.innerHTML = "Website loaded ✅ Click 'Open Your Gift'";
+            
+            // Create initial background hearts
+            setInterval(() => {
+                if(Math.random() > 0.7) {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = '❤';
+                    heart.style.position = 'absolute';
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.top = '100%';
+                    heart.style.fontSize = (Math.random() * 15 + 10) + 'px';
+                    heart.style.color = '#ff6b8b';
+                    heart.style.opacity = '0.3';
+                    heart.style.animation = `floatUp ${Math.random() * 10 + 5}s linear forwards`;
+                    
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        @keyframes floatUp {
+                            to {
+                                transform: translateY(-100vh);
+                                opacity: 0;
+                            }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                    
+                    document.getElementById('hearts').appendChild(heart);
+                    setTimeout(() => heart.remove(), 15000);
+                }
+            }, 1000);
+        };
+                // Initialize
+        window.onload = function() {
+            createFloatingHearts();
+            debug.innerHTML = "Website loaded ✅ Click 'Open Your Gift'";
+            
+            // Create initial background hearts
+            setInterval(() => {
+                if(Math.random() > 0.7) {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = '❤';
+                    heart.style.position = 'absolute';
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.top = '100%';
+                    heart.style.fontSize = (Math.random() * 15 + 10) + 'px';
+                    heart.style.color = '#ff6b8b';
+                    heart.style.opacity = '0.3';
+                    heart.style.animation = `floatUp ${Math.random() * 10 + 5}s linear forwards`;
+                    
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        @keyframes floatUp {
+                            to {
+                                transform: translateY(-100vh);
+                                opacity: 0;
+                            }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                    
+                    document.getElementById('hearts').appendChild(heart);
+                    setTimeout(() => heart.remove(), 15000);
+                }
+            }, 1000);
+        };
+        
+        // ========== YAHAN SE ADD KARO PHOTO ANIMATIONS ==========
+        
+        // 1. Photo click animation function
+        function setupPhotoClickAnimations() {
+            console.log("Setting up photo animations...");
+            
+            const photos = document.querySelectorAll('.photo-box img');
+            
+            photos.forEach((photo, index) => {
+                photo.addEventListener('click', function() {
+                    console.log("Photo " + (index + 1) + " clicked!");
+                    
+                    // Bounce animation
+                    this.style.transition = 'transform 0.3s';
+                    this.style.transform = 'scale(1.3)';
+                    
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 300);
+                    
+                    // Create hearts
+                    createPhotoHearts(this);
+                    
+                    // Update debug info
+                    debug.innerHTML = "Photo " + (index + 1) + " clicked! ❤️";
+                });
+            });
+            
+            console.log("✅ Photo animations ready!");
+        }
+        
+        // 2. Create hearts when photo clicked
+        function createPhotoHearts(photoElement) {
+            const rect = photoElement.getBoundingClientRect();
+            
+            for(let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = '❤';
+                    heart.style.position = 'fixed';
+                    heart.style.left = (rect.left + rect.width/2) + 'px';
+                    heart.style.top = (rect.top + rect.height/2) + 'px';
+                    heart.style.fontSize = (Math.random() * 25 + 20) + 'px';
+                    heart.style.color = '#ff2e63';
+                    heart.style.zIndex = '10000';
+                    heart.style.pointerEvents = 'none';
+                    heart.style.animation = `heartPop${i} 1s ease-out forwards`;
+                    
+                    // Add animation style
+                    const style = document.createElement('style');
+                    const angle = (Math.PI * 2 * i) / 5;
+                    const distance = 80 + Math.random() * 40;
+                    
+                    style.textContent = `
+                        @keyframes heartPop${i} {
+                            0% { 
+                                transform: translate(-50%, -50%) scale(0); 
+                                opacity: 1; 
+                            }
+                            50% { 
+                                transform: translate(-50%, -50%) scale(1.5); 
+                                opacity: 1; 
+                            }
+                            100% { 
+                                transform: translate(
+                                    calc(-50% + ${Math.cos(angle) * distance}px),
+                                    calc(-50% - ${100 + Math.sin(angle) * distance}px)
+                                ) scale(0.5); 
+                                opacity: 0; 
+                            }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                    
+                    document.body.appendChild(heart);
+                    
+                    setTimeout(() => {
+                        if(heart.parentNode) {
+                            heart.parentNode.removeChild(heart);
+                        }
+                    }, 1000);
+                }, i * 100);
+            }
+        }
+        
+        
+
+    </script>
+</body>
+</html>
